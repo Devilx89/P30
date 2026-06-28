@@ -6686,6 +6686,7 @@ function Library:CreateWindow(WindowInfo)
 
 -- VGXMOD ICON
 
+local UserInputService = game:GetService("UserInputService")
 
 if Library.IsMobile then
     local ToggleButton = Library:AddDraggableButton("", function()
@@ -6703,7 +6704,7 @@ if Library.IsMobile then
     Icon.ZIndex = 11
     Icon.Image = "rbxassetid://94858886314945"
     Icon.ImageTransparency = 0
-    Icon.ImageColor3 = Color3.fromRGB(255, 255, 255) -- white
+    Icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
     Icon.ScaleType = Enum.ScaleType.Fit
     Icon.Parent = ToggleButton.Button
 
@@ -6717,9 +6718,17 @@ if Library.IsMobile then
     else
         ToggleButton.Button.Position = UDim2.fromOffset(6, 6)
     end
+else
+    UserInputService.InputBegan:Connect(function(input, processed)
+        if processed then return end
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            -- Changed from LeftControl/RightControl to V
+            if input.KeyCode == Enum.KeyCode.V then
+                Library:Toggle()
+            end
+        end
+    end)
 end
-
-
 
 
 
