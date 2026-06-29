@@ -6686,11 +6686,15 @@ function Library:CreateWindow(WindowInfo)
 
 -- VGXMOD ICON
 
-local UserInputService = game:GetService("UserInputService")
+local function ToggleHub()
+    if Library and typeof(Library.Toggle) == "function" then
+        Library:Toggle()
+    end
+end
 
 if Library.IsMobile then
     local ToggleButton = Library:AddDraggableButton("", function()
-        Library:Toggle()
+        ToggleHub()
     end)
 
     ToggleButton.Button.Size = UDim2.fromOffset(40, 40)
@@ -6712,23 +6716,22 @@ if Library.IsMobile then
     UICorner.CornerRadius = UDim.new(0, 10)
     UICorner.Parent = Icon
 
-    if WindowInfo.MobileButtonsSide == "Right" then
+    if WindowInfo and WindowInfo.MobileButtonsSide == "Right" then
         ToggleButton.Button.Position = UDim2.new(1, -6, 0, 6)
         ToggleButton.Button.AnchorPoint = Vector2.new(1, 0)
     else
         ToggleButton.Button.Position = UDim2.fromOffset(6, 6)
     end
-else
-    UserInputService.InputBegan:Connect(function(input, processed)
-        if processed then return end
-        if input.UserInputType == Enum.UserInputType.Keyboard then
-            -- Changed from LeftControl/RightControl to V
-            if input.KeyCode == Enum.KeyCode.V then
-                Library:Toggle()
-            end
-        end
-    end)
 end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end 
+    
+    if input.KeyCode == Enum.KeyCode.V then
+        ToggleHub()
+    end
+end)
+
 
 
 
